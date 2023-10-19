@@ -33,13 +33,16 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
+          ignore-unfixed: true
           format: 'table'
           output: 'trivy-results.txt'
           severity: 'CRITICAL'
 
-      - name: Check error
-        id: check_error_code
+      - name: Print Trivy Results
+        id: print_trivy_results
         run: cat trivy-results.txt
+
+      - name: 
   
 
 
