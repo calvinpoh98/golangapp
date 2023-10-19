@@ -1,0 +1,26 @@
+name: My first workflow
+on:
+  push:
+    branches:
+      - 'v[0-9]+\.[0-9]+'
+
+jobs: 
+  my_first_wf:
+    if: contains(${{github.event.head_commit.message}},'#NORUN')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        id: checkout_code
+        uses: actions/checkout@v3
+
+      - name: Run Trivy Scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          ignore-unfixed: true
+          format: 'table'
+          output: 'trivy-results.txt'
+          severity: 'CRITICAL'
+
+
