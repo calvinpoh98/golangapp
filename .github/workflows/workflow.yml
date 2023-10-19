@@ -6,7 +6,7 @@ on:
 
 jobs: 
   my_first_wf:
-    if: contains(${{github.event.head_commit.message}},'#NORUN') == 'false'
+    if: contains(${{github.event.head_commit.message}},'#NORUN') == false
     runs-on: ubuntu-latest
     
     steps:
@@ -40,7 +40,7 @@ jobs:
       - name: Check error
         id: check_error_code
         run: cat trivy-results.txt
-
+  
 
 
       
