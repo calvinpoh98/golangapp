@@ -91,7 +91,7 @@ jobs:
         id: docker_meta
         uses: docker/metadata-action@v4.4.0
         with:
-          images: ghcr.io/sigstore/sample-honk
+          images: calvin01/go-fortune
           tags: type=sha,format=long
 
       - name: Debug Print TAGS and DIGEST
