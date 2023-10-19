@@ -43,6 +43,15 @@ jobs:
         id: print_trivy_results
         run: cat trivy-results.txt
 
+      - name: Print Trivy outcome
+        run: |
+          if [ "${{ steps.trivy.outcome }}" == "failure" ]; then
+            echo "Trivy detected vulnerabilities!"
+          else
+            echo "Trivy found no vulnerabilities."
+          fi
+
+          
       - name: If Trivy is failure
         if: steps.trivy.outcome == 'failure'
         id: slack
