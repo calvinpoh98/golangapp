@@ -6,7 +6,7 @@ on:
 
 jobs: 
   my_first_wf:
-    if: contains(${{github.event.head_commits[0].message}},'#NORUN') == false
+    if: ${{ !startsWith(github.event.head_commits.message,'#NORUN')  }}
     runs-on: ubuntu-latest
     
     steps:
@@ -18,6 +18,7 @@ jobs:
           else
             echo "#NORUN not found. Continuing workflow."
           fi
+
 
       - name: Print commit message
         run: echo "${{ github.event.head_commit.message }}"
