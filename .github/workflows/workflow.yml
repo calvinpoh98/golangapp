@@ -42,7 +42,7 @@ jobs:
         id: print_trivy_results
         run: cat trivy-results.txt
 
-      - name: 
+
   
 
 
