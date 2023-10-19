@@ -56,6 +56,12 @@ jobs:
       #     channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
       #     file_path: 'trivy-results.txt'
       #     initial_comment: 'Scan report by user'
+
+      - name: Exit with code 1
+        if: steps.trivy.outcome == 'failure'
+        run: exit 1
+
+        
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -72,7 +78,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: calvin01/app:latest
+          tags: calvin01/go-fortune:${{github.sha}}
 
      
 
