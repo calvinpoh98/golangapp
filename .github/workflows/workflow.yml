@@ -6,7 +6,7 @@ on:
 
 jobs: 
   Build_and_push:
-    if: ${{ startsWith(github.event.head_commits.message,'#NORUN') == false  }}
+    if: ${{ startsWith(github.event.head_commit.message,'#NORUN') == false  }}
     runs-on: ubuntu-latest
     
     steps:
@@ -45,28 +45,30 @@ jobs:
         id: print_trivy_results
         run: cat trivy-results.txt
           
-      - name: If Trivy is failure
-        if: steps.trivy.outcome == 'failure'
-        id: slack
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_CHANNEL: general
-          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
-          SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
-          SLACK_TITLE: Post Title
-          SLACK_USERNAME: rtCamp
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      # - name: If Trivy is failure
+      #   if: steps.trivy.outcome == 'failure'
+      #   id: slack
+      #   uses: rtCamp/action-slack-notify@v2
+      #   env:
+      #     SLACK_CHANNEL: general
+      #     SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+      #     SLACK_ICON: https://github.com/rtCamp.png?size=48
+      #     SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
+      #     SLACK_TITLE: Post Title
+      #     SLACK_USERNAME: rtCamp
+      #     SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
-      - name: Send report
-        if: steps.trivy.outcome == 'failure'
-        id: slack_send_report
-        uses: MeilCli/slack-upload-file@v3
-        with:
-          slack_token: ${{ secrets.SLACK_TOKEN }}
-          channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-          file_path: 'trivy-results.txt'
-          initial_comment: 'post by slack-upload-file'
+      # - name: Send report
+      #   if: steps.trivy.outcome == 'failure'
+      #   id: slack_send_report
+      #   uses: MeilCli/slack-upload-file@v3
+      #   with:
+      #     slack_token: ${{ secrets.SLACK_TOKEN }}
+      #     channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
+      #     file_path: 'trivy-results.txt'
+      #     initial_comment: 'Scan report by user'
+
+
           
 
            
