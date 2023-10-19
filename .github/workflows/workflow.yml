@@ -84,12 +84,23 @@ jobs:
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3.1.1  
 
+      - name: Check Cosign Version
+        run: cosign version
+
       - name: Get docker meta
         id: docker_meta
         uses: docker/metadata-action@v4.4.0
         with:
           images: ghcr.io/sigstore/sample-honk
           tags: type=sha,format=long
+
+      - name: Debug Print TAGS and DIGEST
+        run: |
+          echo "TAGS: $TAGS"
+          echo "DIGEST: $DIGEST"
+        env:
+          TAGS: ${{ steps.docker_meta.outputs.tags }}
+          DIGEST: ${{ steps.build-and-push.outputs.digest }}
 
       - name: Sign image with a key
         run: |
