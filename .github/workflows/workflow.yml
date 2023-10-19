@@ -37,7 +37,7 @@ jobs:
           ignore-unfixed: true
           format: 'table'
           output: 'trivy-results.txt'
-          severity: 'HIGH'
+          severity: 'HIGH,CRITICAL'
 
       - name: Print Trivy Results
         id: print_trivy_results
