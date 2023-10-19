@@ -30,6 +30,7 @@ jobs:
         run: echo "$(ls -l)"
 
       - name: Run Trivy Scanner
+        id: trivy
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
@@ -41,6 +42,76 @@ jobs:
       - name: Print Trivy Results
         id: print_trivy_results
         run: cat trivy-results.txt
+
+      - name: If Trivy is failure
+        if: steps.trivy.outcome == 'failure'
+        id: slack
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          # This data can be any valid JSON from a previous step in the GitHub Action
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "New request",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Type:*\nPaid Time Off"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Event:*\n<example.com|Fred Enriquez>"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*When:*\nAug 10 - Aug 13"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Type:*\nPaid time off"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Hours:*\n16.0 (2 days)"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Remaining balance:*\n32.0 hours (4 days)"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "<https://example.com|View request>"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+          
+      
 
 
   
