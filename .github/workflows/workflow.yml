@@ -6,7 +6,7 @@ on:
 
 jobs: 
   my_first_wf:
-    if: ${{ !startsWith(github.event.head_commits.message,'#NORUN')  }}
+    if: ${{ startsWith(github.event.head_commits.message,'#NORUN') == false  }}
     runs-on: ubuntu-latest
     
     steps:
