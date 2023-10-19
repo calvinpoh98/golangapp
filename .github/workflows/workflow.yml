@@ -18,7 +18,7 @@ jobs:
           else
             echo "#NORUN not found. Continuing workflow."
           fi
-        continue-on-error: true
+
       - name: Print commit message
         run: echo "${{ github.event.head_commit.message }}"
 
