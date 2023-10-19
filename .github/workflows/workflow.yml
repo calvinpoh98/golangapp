@@ -23,4 +23,10 @@ jobs:
           output: 'trivy-results.txt'
           severity: 'CRITICAL'
 
+      - name: Check error
+        id: check_error_code
+        run: echo "($?)"
+
+      
+
 
