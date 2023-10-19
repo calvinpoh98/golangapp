@@ -93,7 +93,7 @@ jobs:
         id: docker_meta
         uses: docker/metadata-action@v4.4.0
         with:
-          images: calvin01/go-fortune
+          images: calvin01/go-fortune:${{github.sha}}
           tags: type=sha,format=long
 
       - name: Debug Print TAGS and DIGEST
@@ -106,7 +106,7 @@ jobs:
 
       - name: Sign image with a key
         run: |
-          cosign sign --yes --key env://COSIGN_PRIVATE_KEY "@${DIGEST}"
+          cosign sign --yes --key env://COSIGN_PRIVATE_KEY "@{TAGS}@${DIGEST}"
         env:
           TAGS: ${{ steps.docker_meta.outputs.tags }}
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
