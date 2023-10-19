@@ -10,6 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+      - name: Check for #NORUN in commit message
+        run: |
+          if [[ "${{ contains(github.event.commits[0].message, '#NORUN') }}" == "true" ]]; then
+            echo "#NORUN found. Exiting workflow."
+            exit 1
+          else
+            echo "#NORUN not found. Continuing workflow."
+          fi
+        continue-on-error: true
       - name: Print commit message
         run: echo "${{ github.event.head_commit.message }}"
 
