@@ -21,13 +21,13 @@ jobs:
           ignore-unfixed: true
           format: 'table'
           output: 'trivy-results.txt'
-          severity: 'CRITICAL'
+          severity: 'HIGH'
 
       - name: Check error
         id: check_error_code
         run: echo "($?)"
 
-        
+
 
       
 
