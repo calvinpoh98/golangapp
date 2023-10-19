@@ -86,29 +86,10 @@ jobs:
         with:
           cosign-release: 'v2.1.1'
 
-      - name: Check Cosign Version
-        run: cosign version
-
-      - name: Get docker meta
-        id: docker_meta
-        uses: docker/metadata-action@v4.4.0
-        with:
-          images: calvin01/go-fortune:${{github.sha}}
-          tags: type=sha,format=long
-
-      - name: Debug Print TAGS and DIGEST
-        run: |
-          echo "TAGS: $TAGS"
-          echo "DIGEST: $DIGEST"
-        env:
-          TAGS: ${{ steps.docker_meta.outputs.tags }}
-          DIGEST: ${{ steps.build-and-push.outputs.digest }}
-
       - name: Sign image with a key
         run: |
-          cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
+          cosign sign --yes --key env://COSIGN_PRIVATE_KEY "calvin01/go-fortune@${DIGEST}"
         env:
-          TAGS: ${{ steps.docker_meta.outputs.tags }}
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
