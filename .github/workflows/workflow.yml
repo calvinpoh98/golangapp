@@ -48,17 +48,25 @@ jobs:
       - name: If Trivy is failure
         if: steps.trivy.outcome == 'failure'
         id: slack
-        uses: slackapi/slack-github-action@v1.24.0
-        with:
-          # This data can be any valid JSON from a previous step in the GitHub Action
-          payload: |
-            {
-              "text": "Trivy detected vulnerabilities!", 
-              "key": "value",
-              "foo": "bar"
-            }
+        uses: rtCamp/action-slack-notify@v2
+        # uses: slackapi/slack-github-action@v1.24.0
+        # with:
+        #   # This data can be any valid JSON from a previous step in the GitHub Action
+        #   payload: |
+        #     {
+        #       "text": "Trivy detected vulnerabilities!", 
+        #       "key": "value",
+        #       "foo": "bar"
+        #     }
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: general
+          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+          SLACK_ICON: https://github.com/rtCamp.png?size=48
+          SLACK_MESSAGE: 'Post Content :rocket:'
+          SLACK_TITLE: Post Title
+          SLACK_USERNAME: rtCamp
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          # SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
           
 
            
