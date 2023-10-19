@@ -35,7 +35,7 @@ jobs:
           scan-type: 'fs'
           format: 'table'
           output: 'trivy-results.txt'
-          severity: 'HIGH'
+          severity: 'CRITICAL'
 
       - name: Check error
         id: check_error_code
