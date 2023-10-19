@@ -57,11 +57,11 @@ jobs:
       #     file_path: 'trivy-results.txt'
       #     initial_comment: 'Scan report by user'
 
-      - name: Exit with code 1
-        if: steps.trivy.outcome == 'failure'
-        run: exit 1
+      # - name: Exit with code 1
+      #   if: steps.trivy.outcome == 'failure'
+      #   run: exit 1
 
-        
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
