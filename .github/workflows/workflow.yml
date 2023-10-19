@@ -86,9 +86,15 @@ jobs:
         with:
           cosign-release: 'v2.1.1'
 
+      - name: Write signing key to disk
+        run: 'echo "$KEY" > cosign.key'
+        shell: bash
+        env:
+          KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+
       - name: Sign image with a key
         run: |
-          cosign sign --yes --key env://COSIGN_PRIVATE_KEY "calvin01/go-fortune@${DIGEST}"
+          cosign sign --yes --key cosign.key "calvin01/go-fortune@${DIGEST}"
         env:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
