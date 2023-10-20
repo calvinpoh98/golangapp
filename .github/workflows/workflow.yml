@@ -1,4 +1,4 @@
-name: My first workflow
+name: Golang Workflow
 on:
   push:
     branches:
@@ -98,22 +98,4 @@ jobs:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
-
-
-
-      
-
-
-
-
-  
-
-     
-  
-   
-      
-
-
-   
-
         
