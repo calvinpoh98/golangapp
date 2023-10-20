@@ -85,7 +85,7 @@ jobs:
 
       - name: Sign image with a key
         run: |
-          cosign sign --yes --key cosign.key "calvin01/go-fortune@${DIGEST}"
+          cosign sign --yes --key env://COSIGN_PRIVATE_KEY "calvin01/go-fortune@${DIGEST}"
         env:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
@@ -99,13 +99,12 @@ jobs:
           SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
           SLACK_ICON: https://github.com/rtCamp.png?size=48
           SLACK_MESSAGE: |
-            *Image build and signed*
-            *Name*: abc
-            *Metriculation*: abc
-            *Email*: abc
-            *Git*:abc
-            *Image*: abc
-          SLACK_TITLE: Post Title
+            *Name*: Poh Yong Quan
+            *Metriculation*: A0201811Y
+            *Email*: e0415620@u.nus.edu
+            *Git*: https://github.com/calvinpoh98/golangapp
+            *Image*: https://hub.docker.com/repository/docker/calvin01/go-fortune/general
+          SLACK_TITLE: Image build and signed
           SLACK_USERNAME: rtCamp
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}  
       
