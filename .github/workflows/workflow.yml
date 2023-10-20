@@ -23,7 +23,7 @@ jobs:
           format: 'table'
           exit-code: 1
           output: 'trivy-results.txt'
-          severity: 'HIGH'
+          severity: 'CRITICAL'
         continue-on-error: true
 
       - name: If Trivy is failure
@@ -47,7 +47,7 @@ jobs:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
           file_path: 'trivy-results.txt'
-          initial_comment: 'Scan report by user'
+          initial_comment: 'Scan report by Yong Quan'
 
       - name: Exit with code 1
         if: steps.trivy.outcome == 'failure'
