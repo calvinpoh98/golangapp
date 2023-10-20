@@ -84,7 +84,7 @@ jobs:
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3.1.1  
         with:
-          cosign-release: 'v2.1.1'
+          cosign-release: 'v2.2.0'
 
       - name: Write signing key to disk
         run: 'echo "$KEY" > cosign.key'
@@ -105,7 +105,7 @@ jobs:
       
 
 
-          
+
 
   
 
