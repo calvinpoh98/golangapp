@@ -100,15 +100,13 @@ jobs:
           SLACK_ICON: https://github.com/rtCamp.png?size=48
           SLACK_MESSAGE: |
             *Name*: Poh Yong Quan
-            *Metriculation*: A0201811Y
+            *Matriculation*: A0201811Y
             *Email*: e0415620@u.nus.edu
             *Git*: https://github.com/calvinpoh98/golangapp
             *Image*: https://hub.docker.com/repository/docker/calvin01/go-fortune/general
           SLACK_TITLE: Image build and signed
           SLACK_USERNAME: rtCamp
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-
-          
     
 
 
