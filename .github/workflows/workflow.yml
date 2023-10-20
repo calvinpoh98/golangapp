@@ -100,5 +100,8 @@ jobs:
             *Image*: https://hub.docker.com/repository/docker/calvin01/go-fortune/general
           SLACK_TITLE: Image build and signed
           SLACK_USERNAME: rtCamp
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}  
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          
+          
+          
       
