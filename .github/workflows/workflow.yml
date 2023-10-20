@@ -35,7 +35,7 @@ jobs:
           SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
           SLACK_ICON: https://github.com/rtCamp.png?size=48
           SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
-          SLACK_TITLE: Post Title
+          SLACK_TITLE: Scan Failed
           SLACK_USERNAME: rtCamp
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
@@ -98,7 +98,13 @@ jobs:
           SLACK_CHANNEL: general
           SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
           SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
+          SLACK_MESSAGE: |
+            *Image build and signed*
+            *Name*: abc
+            *Metriculation*: abc
+            *Email*: abc
+            *Git*:abc
+            *Image*: abc
           SLACK_TITLE: Post Title
           SLACK_USERNAME: rtCamp
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}  
