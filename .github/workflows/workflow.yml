@@ -13,94 +13,96 @@ jobs:
       - name: Checkout Codes
         id: checkout_code
         uses: actions/checkout@v3
+      
+      - name: Print environment variable
+        run: echo "${{env.SCAN_STATUS}}"
+      # - name: Run Trivy Scanner
+      #   id: trivy
+      #   uses: aquasecurity/trivy-action@master
+      #   with:
+      #     scan-type: 'fs'
+      #     ignore-unfixed: true
+      #     format: 'table'
+      #     exit-code: 1
+      #     output: 'trivy-results.txt'
+      #     severity: ${{env.SCAN_STATUS}}
+      #   continue-on-error: true
 
-      - name: Run Trivy Scanner
-        id: trivy
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: 'fs'
-          ignore-unfixed: true
-          format: 'table'
-          exit-code: 1
-          output: 'trivy-results.txt'
-          severity: ${{env.SCAN_STATUS}}
-        continue-on-error: true
+      # - name: If Trivy is failure
+      #   if: steps.trivy.outcome == 'failure'
+      #   id: slack
+      #   uses: rtCamp/action-slack-notify@v2
+      #   env:
+      #     SLACK_CHANNEL: general
+      #     SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+      #     SLACK_ICON: https://github.com/rtCamp.png?size=48
+      #     SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
+      #     SLACK_TITLE: Scan Failed
+      #     SLACK_USERNAME: rtCamp
+      #     SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
-      - name: If Trivy is failure
-        if: steps.trivy.outcome == 'failure'
-        id: slack
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_CHANNEL: general
-          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
-          SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
-          SLACK_TITLE: Scan Failed
-          SLACK_USERNAME: rtCamp
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      # - name: Send report
+      #   if: steps.trivy.outcome == 'failure'
+      #   id: slack_send_report
+      #   uses: MeilCli/slack-upload-file@v3
+      #   with:
+      #     slack_token: ${{ secrets.SLACK_TOKEN }}
+      #     channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
+      #     file_path: 'trivy-results.txt'
+      #     initial_comment: 'Scan report by Yong Quan'
 
-      - name: Send report
-        if: steps.trivy.outcome == 'failure'
-        id: slack_send_report
-        uses: MeilCli/slack-upload-file@v3
-        with:
-          slack_token: ${{ secrets.SLACK_TOKEN }}
-          channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-          file_path: 'trivy-results.txt'
-          initial_comment: 'Scan report by Yong Quan'
+      # - name: Exit with code 1
+      #   if: steps.trivy.outcome == 'failure'
+      #   run: exit 1
 
-      - name: Exit with code 1
-        if: steps.trivy.outcome == 'failure'
-        run: exit 1
+      # - name: Set up QEMU
+      #   uses: docker/setup-qemu-action@v3
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      # - name: Login to Docker Hub
+      #   uses: docker/login-action@v3
+      #   with:
+      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # - name: Build and push
+      #   id: build-and-push
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     push: true
+      #     tags: calvin01/go-fortune:${{github.sha}}
 
-      - name: Build and push
-        id: build-and-push
-        uses: docker/build-push-action@v5
-        with:
-          push: true
-          tags: calvin01/go-fortune:${{github.sha}}
+      # - name: Install Cosign
+      #   uses: sigstore/cosign-installer@v3.1.1  
+      #   with:
+      #     cosign-release: 'v2.2.0'
 
-      - name: Install Cosign
-        uses: sigstore/cosign-installer@v3.1.1  
-        with:
-          cosign-release: 'v2.2.0'
+      # - name: Sign image with a key
+      #   run: |
+      #     cosign sign --yes --key env://COSIGN_PRIVATE_KEY "calvin01/go-fortune@${DIGEST}"
+      #   env:
+      #     COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+      #     COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+      #     DIGEST: ${{ steps.build-and-push.outputs.digest }}
 
-      - name: Sign image with a key
-        run: |
-          cosign sign --yes --key env://COSIGN_PRIVATE_KEY "calvin01/go-fortune@${DIGEST}"
-        env:
-          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
-          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-          DIGEST: ${{ steps.build-and-push.outputs.digest }}
-
-      - name: Submit Success
-        id: submit_success
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_CHANNEL: general
-          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
-          SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_MESSAGE: |
-            *Name*: Poh Yong Quan
-            *Metriculation*: A0201811Y
-            *Email*: e0415620@u.nus.edu
-            *Git*: https://github.com/calvinpoh98/golangapp
-            *Image*: https://hub.docker.com/repository/docker/calvin01/go-fortune/general
-          SLACK_TITLE: Image build and signed
-          SLACK_USERNAME: rtCamp
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      # - name: Submit Success
+      #   id: submit_success
+      #   uses: rtCamp/action-slack-notify@v2
+      #   env:
+      #     SLACK_CHANNEL: general
+      #     SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+      #     SLACK_ICON: https://github.com/rtCamp.png?size=48
+      #     SLACK_MESSAGE: |
+      #       *Name*: Poh Yong Quan
+      #       *Metriculation*: A0201811Y
+      #       *Email*: e0415620@u.nus.edu
+      #       *Git*: https://github.com/calvinpoh98/golangapp
+      #       *Image*: https://hub.docker.com/repository/docker/calvin01/go-fortune/general
+      #     SLACK_TITLE: Image build and signed
+      #     SLACK_USERNAME: rtCamp
+      #     SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           
           
 
@@ -108,4 +110,3 @@ jobs:
 
 
 
-          
