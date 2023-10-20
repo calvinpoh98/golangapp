@@ -14,10 +14,6 @@ jobs:
         id: checkout_code
         uses: actions/checkout@v3
 
-      - name: list directory
-        id: list_directory
-        run: echo "$(ls -l)"
-
       - name: Run Trivy Scanner
         id: trivy
         uses: aquasecurity/trivy-action@master
@@ -27,13 +23,9 @@ jobs:
           format: 'table'
           exit-code: 1
           output: 'trivy-results.txt'
-          severity: 'CRITICAL'
+          severity: 'HIGH'
         continue-on-error: true
 
-      - name: Print Trivy Results
-        id: print_trivy_results
-        run: cat trivy-results.txt
-          
       - name: If Trivy is failure
         if: steps.trivy.outcome == 'failure'
         id: slack
@@ -98,4 +90,16 @@ jobs:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
-        
+
+      - name: Submit Success
+        id: submit_success
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: general
+          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+          SLACK_ICON: https://github.com/rtCamp.png?size=48
+          SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
+          SLACK_TITLE: Post Title
+          SLACK_USERNAME: rtCamp
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}  
+      
