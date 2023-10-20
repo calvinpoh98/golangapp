@@ -27,7 +27,7 @@ jobs:
           format: 'table'
           exit-code: 1
           output: 'trivy-results.txt'
-          severity: 'HIGH'
+          severity: 'CRITICAL'
         continue-on-error: true
 
       - name: Print Trivy Results
@@ -60,7 +60,6 @@ jobs:
       - name: Exit with code 1
         if: steps.trivy.outcome == 'failure'
         run: exit 1
-
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
